@@ -1,4 +1,3 @@
-import { PlayerSymbol } from 'src/Utilities/enum';
 import { Game } from 'src/games/game.model';
 import {
   Entity,
@@ -9,15 +8,15 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Player {
+export class Cell {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  playerName: string;
+  row: string;
 
-  @Column({ type: 'enum', enum: PlayerSymbol })
-  symbol: PlayerSymbol;
+  @Column()
+  column: string;
 
   @ManyToOne(() => Game)
   @JoinColumn()
