@@ -58,10 +58,7 @@ export class GatewayService
       },
     });
 
-    console.log('player', player, gameInstance, player.length);
-
     if (player.length >= 2) {
-      console.log('player', player, gameInstance, player.length);
       return {
         success: false,
         message: 'Room is Full',
@@ -132,7 +129,6 @@ export class GatewayService
     @MessageBody() data: GateWayMakeMoveDTO,
   ) {
     const { roomId, row, column, playerId } = data;
-    console.log(data);
     const makeMove = await this.gameService.move(
       roomId as unknown as number,
       playerId,

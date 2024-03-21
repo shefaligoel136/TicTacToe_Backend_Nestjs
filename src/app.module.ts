@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PlayersModule } from './players/players.module';
 import { GamesModule } from './games/games.module';
 import { CellModule } from './cell/cell.module';
@@ -16,16 +16,20 @@ import { GatewayModule } from './gateway/gateway.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'TicTacToe',
-      entities: [Player, Game, Cell],
-      autoLoadEntities: true,
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get('DATABASE_HOST', 'localhost'),
+        port: configService.get<number>('DATABASE_PORT', 3306),
+        username: configService.get('DATABASE_USERNAME', 'root'),
+        password: configService.get('DATABASE_PASSWORD', ''),
+        database: configService.get('DATABASE_NAME', 'TicTacToe'),
+        entities: [Player, Game, Cell],
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
     }),
     GatewayModule,
     PlayersModule,
