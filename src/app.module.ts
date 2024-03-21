@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Player } from './players/players.model';
 import { Game } from './games/game.model';
 import { Cell } from './cell/cell.model';
+import { GatewayModule } from './gateway/gateway.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { Cell } from './cell/cell.model';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    GatewayModule,
     PlayersModule,
     GamesModule,
     CellModule,

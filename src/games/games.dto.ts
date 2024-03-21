@@ -16,3 +16,21 @@ export class JoinGameDto {
   @Type(() => Number)
   roomId: number;
 }
+
+export class MakeMoveDTO {
+  @IsNotEmpty()
+  @Type(() => Number)
+  playerId: number;
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  roomId: number;
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  row: number;
+
+  @IsNotEmpty()
+  @Type(() => Number)
+  column: number;
+}

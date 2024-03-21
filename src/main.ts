@@ -13,6 +13,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(bodyParser.json({ limit: '50mb' }));
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+  app.enableCors();
 
   const PORT = configService.get<number>('PORT');
   await app.listen(PORT, () => {

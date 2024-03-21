@@ -4,6 +4,7 @@ export enum PlayerSymbol {
 }
 
 export enum GameStatus {
+  WAITING_FOR_PLAYERS = 'WAITING_FOR_PLAYERS',
   INPROGRESS = 'INPROGRESS',
   ENDED = 'ENDED',
   TIE = 'TIE',

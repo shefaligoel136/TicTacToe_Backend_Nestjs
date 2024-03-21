@@ -1,4 +1,5 @@
 import { Game } from 'src/games/game.model';
+import { Player } from 'src/players/players.model';
 import {
   Entity,
   Column,
@@ -13,12 +14,16 @@ export class Cell {
   id: number;
 
   @Column()
-  row: string;
+  row: number;
 
   @Column()
-  column: string;
+  column: number;
 
   @ManyToOne(() => Game)
   @JoinColumn()
   game: Game;
+
+  @ManyToOne(() => Player)
+  @JoinColumn()
+  player: Player;
 }

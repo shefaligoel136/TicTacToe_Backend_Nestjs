@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Player } from './players.model';
 import { PlayerSymbol } from 'src/Utilities/enum';
 import { Game } from 'src/games/game.model';
@@ -34,15 +34,11 @@ export class PlayersService {
     }
   }
 
-  findAll(): Promise<Player[]> {
-    return this.playersRepository.find();
+  async findById(id: number): Promise<Player> {
+    return await this.playersRepository.findOneBy({ id });
   }
 
-  findOne(id: number): Promise<Player | null> {
-    return this.playersRepository.findOneBy({ id });
-  }
-
-  async remove(id: number): Promise<void> {
-    await this.playersRepository.delete(id);
+  async findAll(options?: FindManyOptions<Player>): Promise<Player[]> {
+    return await this.playersRepository.find(options);
   }
 }

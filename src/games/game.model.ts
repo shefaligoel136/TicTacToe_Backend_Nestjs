@@ -20,6 +20,10 @@ export class Game {
   @JoinColumn()
   winner: Player;
 
-  @Column({ type: 'enum', enum: GameStatus, default: GameStatus.INPROGRESS })
+  @Column({
+    type: 'enum',
+    enum: GameStatus,
+    default: GameStatus.WAITING_FOR_PLAYERS,
+  })
   status: GameStatus;
 }
