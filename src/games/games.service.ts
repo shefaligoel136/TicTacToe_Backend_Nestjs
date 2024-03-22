@@ -50,14 +50,14 @@ export class GamesService {
     }
   }
 
-  async create(playerName: string): Promise<number> {
+  async create(playerName: string): Promise<string> {
     try {
       const roomId = await this.generateRoomId();
       const game = await this.createGameInstance(roomId, playerName);
       if (!game) {
         throw new HttpException('Game cannot be started at the moment', 500);
       }
-      return game.roomId;
+      return game.roomId as unknown as string;
     } catch (error) {
       return Promise.reject(error);
     }

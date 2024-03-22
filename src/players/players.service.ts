@@ -41,4 +41,19 @@ export class PlayersService {
   async findAll(options?: FindManyOptions<Player>): Promise<Player[]> {
     return await this.playersRepository.find(options);
   }
+
+  async findByIdAndGame(id: number, game: Game): Promise<Player> {
+    try {
+      const playerInstance = await this.playersRepository.findOneBy({
+        id,
+        game,
+      });
+      if (!playerInstance) {
+        throw new HttpException('Player not found in the room!', 404);
+      }
+      return playerInstance;
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
 }

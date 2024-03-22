@@ -33,7 +33,7 @@ export class CellService {
   ): Promise<CellMoveDTOResponse> {
     try {
       const game = await this.gameService.findOne({ where: { roomId } });
-      const player = await this.playerService.findById(playerId);
+      const player = await this.playerService.findByIdAndGame(playerId, game);
 
       if (!this.isValidMove(row, column)) {
         throw new HttpException(

@@ -27,7 +27,7 @@ import { GatewayModule } from './gateway/gateway.module';
         database: configService.get('DATABASE_NAME', 'TicTacToe'),
         entities: [Player, Game, Cell],
         autoLoadEntities: true,
-        synchronize: true,
+        // synchronize: true,
       }),
       inject: [ConfigService],
     }),

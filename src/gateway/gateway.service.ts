@@ -12,6 +12,7 @@ import { GamesService } from 'src/games/games.service';
 import { PlayersService } from 'src/players/players.service';
 import { GateWayMakeMoveDTO, GateWayRoomDTO } from './gateWayRoom.DTO';
 import { GameStatus } from 'src/Utilities/enum';
+import { CreateGameDto } from 'src/games/games.dto';
 
 interface Room {
   id: number;
@@ -86,6 +87,35 @@ export class GatewayService
     this.server.emit('userLeft');
   }
 
+  @SubscribeMessage('createRoom')
+  async handleCreateRoom(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: CreateGameDto,
+  ) {
+    try {
+      client.data.roomIds ??= [];
+      const { playerName } = data;
+
+      const roomId = await this.gameService.create(playerName);
+
+      const canJoinRoom = await this.canJoinRoom(roomId as unknown as number);
+      if (!canJoinRoom.success) {
+        return canJoinRoom;
+      }
+
+      const roomIdString: string = roomId.toString();
+      client.join(roomIdString);
+      client.data.roomIds.push(roomIdString);
+      return { success: true, roomId: roomIdString };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        message: error?.response?.message || error.message,
+      };
+    }
+  }
+
   @SubscribeMessage('joinRoom')
   async handleJoinRoom(
     @ConnectedSocket() client: Socket,
@@ -93,8 +123,7 @@ export class GatewayService
   ) {
     try {
       client.data.roomIds ??= [];
-      const { roomId } = data;
-
+      const { roomId, playerName } = data;
       if (client.data.roomIds.includes(roomId)) {
         return { success: true };
       }
@@ -104,12 +133,7 @@ export class GatewayService
         return canJoinRoom;
       }
 
-      if (client.data.roomIds.length >= 2) {
-        return {
-          success: false,
-          message: 'Room Size Exceeded',
-        };
-      }
+      await this.gameService.join(playerName, roomId as unknown as number);
 
       client.join(roomId as string);
       client.data.roomIds.push(roomId);
